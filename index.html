@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>なろうテンプレ資料集 v5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap');
+:root{
+  --bg:#fdf6f0; --surf:#fff; --surf2:#fdf0e8; --border:#e8d8c8; --border2:#d4b89a;
+  --text:#2d1f0e; --text2:#5a3e28; --text3:#a07856;
+  --c1:#8b4513; --c2:#b5651d; --c3:#a0522d; --c4:#7b3f00; --c5:#c1440e;
+  --acc:#d4691e; --acc2:#f0a060;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;line-height:1.6;}
+
+/* ヘッダー固定 */
+#hdr{height:50px;background:var(--surf);border-bottom:2px solid var(--border2);box-shadow:0 2px 8px rgba(100,40,0,.1);display:flex;align-items:center;gap:12px;padding:0 20px;position:fixed;top:0;left:0;right:0;z-index:1000;}
+#hdr h1{font-family:'Noto Serif JP',serif;font-size:14px;color:var(--c4);white-space:nowrap;flex-shrink:0;}
+.tabs{display:flex;gap:3px;flex-wrap:wrap;}
+.tab{padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;border:1px solid transparent;color:var(--text3);transition:all .15s;white-space:nowrap;}
+.tab:hover{background:var(--surf2);color:var(--text2);}
+.tab.on{background:#fff0e6;border-color:var(--acc);color:var(--acc);}
+.fbtn{margin-left:auto;padding:4px 11px;border-radius:5px;border:1px solid var(--border2);background:var(--surf2);color:var(--text3);cursor:pointer;font-size:11px;font-weight:500;white-space:nowrap;}
+.fbtn:hover,.fbtn.on{background:#fff0e0;color:var(--c5);border-color:var(--c5);}
+
+/* メイン（ヘッダー分オフセット） */
+main{padding:68px 320px 40px 20px;max-width:100%;}
+.sec{display:none;}.sec.active{display:block;}
+.sech{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--border2);}
+.sech .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--acc);}
+.sech h2{font-family:'Noto Serif JP',serif;font-size:14px;color:var(--c4);}
+.sech small{font-size:11px;color:var(--text3);}
+
+/* サブタブ */
+.stabs{display:flex;gap:3px;margin-bottom:10px;flex-wrap:wrap;}
+.stab{padding:4px 13px;border-radius:5px;border:1px solid var(--border);background:var(--surf2);color:var(--text3);cursor:pointer;font-size:12px;font-weight:500;}
+.stab:hover{background:#fde8d8;}
+.stab.on{background:#fff0e6;border-color:var(--acc);color:var(--acc);}
+.ss{display:none;}.ss.active{display:block;}
+
+/* テーブルラッパー */
+.tw{overflow-x:auto;border-radius:8px;border:1px solid var(--border2);margin-bottom:16px;box-shadow:0 1px 4px rgba(100,40,0,.08);}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--surf);}
+
+/* thead は sticky しない — スクロール時に列名が流れる方が二重表示より良い */
+thead th{background:#fdf0e8;padding:8px 11px;text-align:left;font-weight:700;font-size:11px;color:var(--text3);border-bottom:2px solid var(--border2);white-space:nowrap;letter-spacing:.04em;cursor:pointer;user-select:none;}
+thead th:hover{background:#f8e4d0;color:var(--c4);}
+thead th.sort-asc::after{content:" ▲";font-size:9px;}
+thead th.sort-desc::after{content:" ▼";font-size:9px;}
+
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover td{background:#fdf5ee;}
+/* .used は将来用に保持するが通常時は非表示にしない */
+/* tbody tr.used{opacity:.35;} */
+tbody td{padding:9px 11px;vertical-align:top;color:var(--text2);line-height:1.55;}
+td.name{font-weight:700;color:var(--text);white-space:nowrap;min-width:148px;}
+td.sub{white-space:nowrap;}
+td.desc{min-width:140px;max-width:195px;font-size:12px;}
+td.cheat{min-width:110px;font-size:12px;}
+td.note{min-width:180px;max-width:260px;font-size:12px;}
+
+/* グループ行 */
+.grp td{background:#f5e6d6;font-weight:700;font-size:11px;color:var(--c4);letter-spacing:.05em;padding:5px 11px;border-bottom:1px solid var(--border2);}
+
+/* バッジ */
+.badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;line-height:1.5;background:#f5ede4;color:var(--text3);border:1px solid var(--border2);}
+
+/* エロ相性 */
+.emax{color:#bf3300;font-weight:700;font-size:13px;}
+.ehi{color:#1a5fa8;font-weight:600;}
+.emi{color:var(--text3);}
+
+/* 競合・難易度 */
+.clo{color:#1a7a52;font-size:11px;font-weight:600;}
+.cmi{color:var(--text3);font-size:11px;}
+.chi{color:#c0392b;font-size:11px;font-weight:600;}
+.dlo{color:#1a7a52;font-size:11px;font-weight:600;}
+.dmi{color:var(--text3);font-size:11px;}
+.dhi{color:#c0392b;font-size:11px;font-weight:600;}
+
+/* チェックボタン */
+.ck{width:20px;height:20px;border-radius:4px;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:auto;color:transparent;font-size:11px;transition:all .15s;}
+.ck:hover{border-color:var(--acc);}
+.ck.on{background:var(--acc);border-color:var(--acc);color:#fff;}
+
+  /* ── サマリーパネル ── */
+  #summary-wrap{position:fixed;top:50px;right:0;width:300px;height:calc(100vh - 50px);background:var(--surf);border-left:2px solid var(--border2);display:flex;flex-direction:column;z-index:900;box-shadow:-4px 0 16px rgba(100,40,0,.08);}
+  #sum-hdr{padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  #sum-hdr h3{font-family:'Noto Serif JP',serif;font-size:13px;color:var(--c4);margin-bottom:4px;}
+  #sel-count{font-size:11px;color:var(--text3);}
+  #sum-list{flex:1;overflow-y:auto;padding:10px 12px;}
+  .sg{margin-bottom:10px;}
+  .sg-title{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.06em;margin-bottom:4px;padding-bottom:2px;border-bottom:1px solid var(--border);}
+  .si{margin-bottom:3px;background:#fff4e6;border:1px solid var(--acc);border-radius:4px;padding:4px 8px;}
+  .si-name{font-size:12px;font-weight:600;color:var(--text);}
+  .si-desc{font-size:11px;color:var(--text2);line-height:1.4;}
+  .sum-empty{font-size:12px;color:var(--text3);text-align:center;padding:20px 0;line-height:1.9;}
+  #sum-ftr{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:7px;}
+  #copy-btn{padding:9px;background:var(--acc);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+  #copy-btn:hover{background:var(--c5);}
+  #copy-btn.ok{background:#2a7a52;}
+  #reset-btn{padding:6px;background:transparent;color:var(--text3);border:1px solid var(--border2);border-radius:6px;font-size:12px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+  #reset-btn:hover{color:var(--c5);border-color:var(--c5);}
+  /* 選択ボタン */
+  .sel-col{width:34px;text-align:center;}
+  .sel-btn{width:22px;height:22px;border-radius:4px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:auto;color:transparent;font-size:11px;transition:all .15s;}
+  .sel-btn:hover{border-color:var(--acc);background:#fff4e6;}
+  .sel-btn.on{background:var(--acc);border-color:var(--acc);color:#fff;}
+  tbody tr.sel td{background:#fff4e6!important;}
+  tbody tr.sel{box-shadow:inset 3px 0 0 var(--acc);}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <h1>📚 なろうテンプレ資料集 v5</h1>
+  <div class="tabs" id="TB">
+    <div class="tab" data-sec="s1">① 来歴・前提</div>
+    <div class="tab" data-sec="s2">② 世界観・舞台</div>
+    <div class="tab" data-sec="s3">③ 展開パターン</div>
+    <div class="tab" data-sec="s4">④ 主人公</div>
+    <div class="tab" data-sec="s5">⑤ ヒロイン</div>
+  </div>
+  <button class="fbtn" id="FB" onclick="toggleF()">◎◎ のみ表示</button>
+</div>
+
+<div id="summary-wrap">
+  <div id="sum-hdr">
+    <h3>📋 選択中の設定</h3>
+    <div id="sel-count">まだ選択なし</div>
+  </div>
+  <div id="sum-list"><div class="sum-empty">行をクリックして<br>設定を選択してください</div></div>
+  <div id="sum-ftr">
+    <button id="copy-btn" onclick="copyToClipboard()">📋 Claude用にコピー</button>
+    <button id="reset-btn" onclick="resetAll()">🗑 リセット</button>
+  </div>
+</div>
+<main>
+
+<!-- ① 来歴 -->
+<div class="sec" id="s1">
+  <div class="sech"><span class="dot"></span><h2>① 来歴・前提</h2><small>— どこから来たか・どんな経緯で始まるか</small></div>
+  <div class="tw"><table id="t1">
+    <thead><tr>
+      <th onclick="sort(this,'t1')">テンプレ名</th>
+      <th>サブカテゴリ</th>
+      <th>概要</th>
+      <th>チートとの組み合わせ</th>
+      <th onclick="sort(this,'t1')">エロ相性</th>
+      <th onclick="sort(this,'t1')">競合</th>
+      <th onclick="sort(this,'t1')">難易度</th>
+      <th>エロへの活かし方</th>
+      <th class="sel-col">選択</th>
+    </tr></thead>
+    <tbody>
+<tr class="grp"><td colspan="9">転生系</td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="異世界転生（死亡後）" data-desc="交通事故・過労死で死亡後に転生。最定番の来歴"><td class="name">異世界転生（死亡後）</td><td class="sub"><span class="badge">転生系</span></td><td class="desc">交通事故・過労死で死亡後に転生。最定番の来歴</td><td class="cheat">前世知識・能力チート</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">前世の性知識を持ち込める。ヒロインへのリードが自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="ゲーム世界転生・転移" data-desc="プレイしたゲームの世界へ。攻略知識を持ち込める"><td class="name">ゲーム世界転生・転移</td><td class="sub"><span class="badge">ゲーム系</span></td><td class="desc">プレイしたゲームの世界へ。攻略知識を持ち込める</td><td class="cheat">攻略知識・隠しルート</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">ヒロインを「落とす」構造がそのままエロに転用できる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="乙女ゲー転生（悪役令嬢）" data-desc="悪役令嬢として転生し破滅回避を目指す"><td class="name">乙女ゲー転生（悪役令嬢）</td><td class="sub"><span class="badge">乙女ゲー系</span></td><td class="desc">悪役令嬢として転生し破滅回避を目指す</td><td class="cheat">原作知識・攻略対象の把握</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dmi" data-v="2">中</td><td class="note">逆ハー・攻略対象を逆に落とす構造</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">転移・召喚系</td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="異世界転移（生きたまま）" data-desc="召喚・迷い込みで現代人のまま放り込まれる"><td class="name">異世界転移（生きたまま）</td><td class="sub"><span class="badge">転移系</span></td><td class="desc">召喚・迷い込みで現代人のまま放り込まれる</td><td class="cheat">現代知識・文化ギャップ</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">戸惑い→順応の過程で距離が縮まる流れが自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="クラス丸ごと転移" data-desc="学校のクラス全員が異世界に転移させられる。主人公だけ能力が違うことが多い"><td class="name">クラス丸ごと転移</td><td class="sub"><span class="badge">転移系</span></td><td class="desc">学校のクラス全員が異世界に転移させられる。主人公だけ能力が違うことが多い</td><td class="cheat">外れスキル・隠れ最強・現代知識</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">クラスメイトとの格差・疎外→覚醒の流れ。クラス内の好意ヒロインとの再会エロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="巻き込まれ召喚（意図せず転移）" data-desc="勇者の隣にいただけ・偶然に巻き込まれて異世界に来てしまった主人公"><td class="name">巻き込まれ召喚（意図せず転移）</td><td class="sub"><span class="badge">転移系</span></td><td class="desc">勇者の隣にいただけ・偶然に巻き込まれて異世界に来てしまった主人公</td><td class="cheat">外れ役職・隠れた素質・現代知識</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">「なぜ自分が？」という疑問が独自の推進力。勇者パーティから外れた孤独感がヒロインとの絆を加速する</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="召喚→即捨て・見捨てられ" data-desc="召喚されたが役立たずとして即座に捨てられ、別の場所で力をつける"><td class="name">召喚→即捨て・見捨てられ</td><td class="sub"><span class="badge">転移系</span></td><td class="desc">召喚されたが役立たずとして即座に捨てられ、別の場所で力をつける</td><td class="cheat">隠れ最強・外れスキルが実は最強</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">捨てた側への復讐×救ってくれたヒロインへの恩返しエロ。王国の女たちへのざまぁ展開と組み合わせやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">現代系</td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="現代ダンジョン発生" data-desc="現代日本にダンジョンが出現。ハンター制度が生まれる"><td class="name">現代ダンジョン発生</td><td class="sub"><span class="badge">現代系</span></td><td class="desc">現代日本にダンジョンが出現。ハンター制度が生まれる</td><td class="cheat">現代知識×ハンタースキル</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">学生・社会人・配信者と組み合わせやすく共感ベースが高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="①来歴" data-name="現代に異世界人が来る" data-desc="勇者召喚の逆パターン。異世界の存在が現代に現れる"><td class="name">現代に異世界人が来る</td><td class="sub"><span class="badge">逆召喚系</span></td><td class="desc">勇者召喚の逆パターン。異世界の存在が現代に現れる</td><td class="cheat">なし</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">ギャップコメディ→エロへ。現代の性文化に異世界人が戸惑う展開</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">時間移動系</td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="タイムスリップ（歴史・遠過去）" data-desc="現代→戦国・幕末・中世へ。自分のままで過去に行く"><td class="name">タイムスリップ（歴史・遠過去）</td><td class="sub"><span class="badge">タイムスリップ系</span></td><td class="desc">現代→戦国・幕末・中世へ。自分のままで過去に行く</td><td class="cheat">歴史知識・現代技術・医療</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">側室・夜伽設定が時代考証として自然に使える。身分差エロと相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="タイムスリップ（近過去・昭和平成）" data-desc="令和→昭和・平成へ。読者の郷愁と組み合わさる"><td class="name">タイムスリップ（近過去・昭和平成）</td><td class="sub"><span class="badge">タイムスリップ系</span></td><td class="desc">令和→昭和・平成へ。読者の郷愁と組み合わさる</td><td class="cheat">株・競馬・スポーツ結果の先読み</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">バブル期の価値観ギャップ・時代の性規範の違いを逆手にとれる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="①来歴" data-name="ループ・やり直し" data-desc="死亡や失敗でリセット。周回知識が蓄積する"><td class="name">ループ・やり直し</td><td class="sub"><span class="badge">ループ系</span></td><td class="desc">死亡や失敗でリセット。周回知識が蓄積する</td><td class="cheat">周回知識の完全把握</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dhi" data-v="3">高</td><td class="note">ヒロインとの関係を何度もやり直す→共依存エロと相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">その他・特殊系</td></tr>
+<tr class="row-mi" data-cat="①来歴" data-name="現地主人公（転生なし）" data-desc="元々その世界の住人。設定がシンプル"><td class="name">現地主人公（転生なし）</td><td class="sub"><span class="badge">現地系</span></td><td class="desc">元々その世界の住人。設定がシンプル</td><td class="cheat">覚醒・血統・隠れた才能</td><td class="emi" data-v="1">○</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">世界観の縛りが少ないため自由にエロ設定を作れる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ② 世界観 -->
+<div class="sec" id="s2">
+  <div class="sech"><span class="dot"></span><h2>② 世界観・舞台</h2><small>— どこにいるか</small></div>
+  <div class="tw"><table id="t2">
+    <thead><tr>
+      <th onclick="sort(this,'t2')">テンプレ名</th><th>サブカテゴリ</th><th>概要</th><th>チートとの組み合わせ</th>
+      <th onclick="sort(this,'t2')">エロ相性</th><th onclick="sort(this,'t2')">競合</th><th onclick="sort(this,'t2')">難易度</th>
+      <th>エロへの活かし方</th><th class="sel-col">選択</th>
+    </tr></thead>
+    <tbody>
+<tr class="grp"><td colspan="10">ファンタジー系</td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="中世ヨーロッパ風ファンタジー" data-desc="剣と魔法の王道世界観。ギルド・冒険者・魔王が定番"><td class="name">中世ヨーロッパ風ファンタジー</td><td class="sub"><span class="badge">ファンタジー系</span></td><td class="desc">剣と魔法の王道世界観。ギルド・冒険者・魔王が定番</td><td class="cheat">能力チート・スキル鑑定</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">需要安定。ハーレム・後宮・冒険者パーティとの相性が高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="東洋・和風ファンタジー" data-desc="陰陽師・侍・妖怪・忍者などの和風要素"><td class="name">東洋・和風ファンタジー</td><td class="sub"><span class="badge">ファンタジー系</span></td><td class="desc">陰陽師・侍・妖怪・忍者などの和風要素</td><td class="cheat">霊力・術式・妖怪との契約</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">巫女・花魁・武家の娘などのキャラ属性がエロと親和性高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="魔法学校・アカデミー" data-desc="魔法・騎士・貴族のアカデミーが舞台。2025年後半から急増"><td class="name">魔法学校・アカデミー</td><td class="sub"><span class="badge">学園系</span></td><td class="desc">魔法・騎士・貴族のアカデミーが舞台。2025年後半から急増</td><td class="cheat">隠れた才能・禁忌魔法</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">制服・先輩後輩・寮生活などエロの定番シチュが自然に使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="VRMMO・ゲームシステム世界" data-desc="ゲームのようなステータス・スキル・レベルアップがある世界"><td class="name">VRMMO・ゲームシステム世界</td><td class="sub"><span class="badge">ゲーム系</span></td><td class="desc">ゲームのようなステータス・スキル・レベルアップがある世界</td><td class="cheat">隠しスキル・バグ技・開発者権限</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">魅了・従属スキルなどエロ展開に使えるスキル設計が自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">特殊設定系</td></tr>
+<tr class="row-max" data-cat="②世界観" data-name="貞操逆転世界" data-desc="男女の性規範が逆転した世界。女性が積極的・男性が守られる側"><td class="name">貞操逆転世界</td><td class="sub"><span class="badge">特殊設定</span></td><td class="desc">男女の性規範が逆転した世界。女性が積極的・男性が守られる側</td><td class="cheat">なし（世界観自体がチート）</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dlo" data-v="1">低</td><td class="note">構造的にエロが正当化。ハーレムを女性から積極的に作る展開にしやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="種族混在世界（獣人・亜人・ドラゴン）" data-desc="人間以外の種族が共存する世界。亜人・モンスター娘・獣人が登場"><td class="name">種族混在世界（獣人・亜人・ドラゴン）</td><td class="sub"><span class="badge">特殊設定</span></td><td class="desc">人間以外の種族が共存する世界。亜人・モンスター娘・獣人が登場</td><td class="cheat">種族間の力・亜人の特殊能力</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">モンスター娘・獣耳・竜人など特定性癖層への訴求が強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="②世界観" data-name="後宮・ハーレム国家設定" data-desc="複数の妻・妾を持つことが社会的に認められた国家設定"><td class="name">後宮・ハーレム国家設定</td><td class="sub"><span class="badge">特殊設定</span></td><td class="desc">複数の妻・妾を持つことが社会的に認められた国家設定</td><td class="cheat">政治力・武力・魔法力</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">ハーレムエロが世界観として正当化。政略結婚・寵愛争いが自然に発生</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="ディストピア・奴隷制度あり世界" data-desc="奴隷制・階級制度が存在する世界。権力差が構造的に組み込まれている"><td class="name">ディストピア・奴隷制度あり世界</td><td class="sub"><span class="badge">特殊設定</span></td><td class="desc">奴隷制・階級制度が存在する世界。権力差が構造的に組み込まれている</td><td class="cheat">圧倒的な戦闘力・解放者としての役割</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">支配・被支配の関係エロ。奴隷→信頼→愛情の流れが感情的な起伏を作る</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">現代・終末系</td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="現代ダンジョン世界" data-desc="現代日本にダンジョンが存在。ハンター・ギルド・ランク制度"><td class="name">現代ダンジョン世界</td><td class="sub"><span class="badge">現代系</span></td><td class="desc">現代日本にダンジョンが存在。ハンター・ギルド・ランク制度</td><td class="cheat">隠れ最強・ユニークスキル</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">現代の職業・日常設定がそのまま使える。共感ベースが高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="異能力・超能力現代" data-desc="現代日本に超能力者や異能力組織が存在する世界"><td class="name">異能力・超能力現代</td><td class="sub"><span class="badge">現代系</span></td><td class="desc">現代日本に超能力者や異能力組織が存在する世界</td><td class="cheat">特殊能力・隠れた素質</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">能力の秘密を共有する特別な関係性がエロの起点になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="終末世界・ポストアポカリプス" data-desc="文明崩壊後の世界。生き残りをかけた極限状態が舞台"><td class="name">終末世界・ポストアポカリプス</td><td class="sub"><span class="badge">終末系</span></td><td class="desc">文明崩壊後の世界。生き残りをかけた極限状態が舞台</td><td class="cheat">現代知識・サバイバル技術</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">極限状態での性的緊張感。「最後かもしれない」切迫感がエロの強度を上げる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="②世界観" data-name="ゾンビ・感染世界" data-desc="ゾンビや感染体が蔓延する現代崩壊世界。生存者同士の繋がりが密になる"><td class="name">ゾンビ・感染世界</td><td class="sub"><span class="badge">終末系</span></td><td class="desc">ゾンビや感染体が蔓延する現代崩壊世界。生存者同士の繋がりが密になる</td><td class="cheat">現代知識・医療・戦闘技術</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">生存者同士の強制的な密着・共依存関係がエロと非常に相性が良い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="②世界観" data-name="戦国・江戸・幕末" data-desc="日本の実際の時代を舞台。タイムスリップと相性が良い"><td class="name">戦国・江戸・幕末</td><td class="sub"><span class="badge">歴史系</span></td><td class="desc">日本の実際の時代を舞台。タイムスリップと相性が良い</td><td class="cheat">歴史知識・現代技術</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">側室・夜伽・花魁など時代設定のエロが使える。考証が必要</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">舞台・規模系</td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="辺境・田舎村" data-desc="王都から離れた辺境が舞台。スローライフ・内政展開の起点になる"><td class="name">辺境・田舎村</td><td class="sub"><span class="badge">舞台系</span></td><td class="desc">王都から離れた辺境が舞台。スローライフ・内政展開の起点になる</td><td class="cheat">生産・調合・知識チート</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dlo" data-v="1">低</td><td class="note">村娘・移住してきた貴族娘との距離感が縮まりやすい。都会の喧騒から逃れた密室感がエロを加速</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="②世界観" data-name="王都・大都市" data-desc="政治・ギルド・アカデミーが集中する中心地。多様なキャラが集まる"><td class="name">王都・大都市</td><td class="sub"><span class="badge">舞台系</span></td><td class="desc">政治・ギルド・アカデミーが集中する中心地。多様なキャラが集まる</td><td class="cheat">政治力・人脈・情報収集</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">貴族・冒険者・商人など多彩なヒロインが自然に登場する舞台。身分差エロが作りやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="②世界観" data-name="宇宙・SF異世界" data-desc="惑星間移動・銀河帝国・宇宙船が舞台のSF系なろう。増加傾向にある"><td class="name">宇宙・SF異世界</td><td class="sub"><span class="badge">SF系</span></td><td class="desc">惑星間移動・銀河帝国・宇宙船が舞台のSF系なろう。増加傾向にある</td><td class="cheat">現代知識・技術チート・AIシステム</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">閉鎖空間（宇宙船）での密着・異星人・アンドロイドヒロインとのエロが特有のニッチ需要を持つ</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ③ 展開 -->
+<div class="sec" id="s3">
+  <div class="sech"><span class="dot"></span><h2>③ 展開パターン</h2><small>— 何をするか・どう進むか</small></div>
+  <div class="tw"><table id="t3">
+    <thead><tr>
+      <th onclick="sort(this,'t3')">テンプレ名</th><th>サブカテゴリ</th><th>概要</th><th>チートとの組み合わせ</th>
+      <th onclick="sort(this,'t3')">エロ相性</th><th onclick="sort(this,'t3')">競合</th><th onclick="sort(this,'t3')">難易度</th>
+      <th>エロへの活かし方</th><th class="sel-col">選択</th>
+    </tr></thead>
+    <tbody>
+<tr class="grp"><td colspan="10">目的・ゴール系</td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="魔王討伐・世界救済" data-desc="異世界の脅威（魔王・災害・神）を打倒することが最終目的の古典構造"><td class="name">魔王討伐・世界救済</td><td class="sub"><span class="badge">目的系</span></td><td class="desc">異世界の脅威（魔王・災害・神）を打倒することが最終目的の古典構造</td><td class="cheat">どのチートとも相性良い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">旅の途中でヒロインが増えるハーレム構築の大義名分。ラスボス前夜の緊張感エロが定番</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="内政・国家建設" data-desc="領地・拠点・王国を一から作り上げることが主目的。辺境伯・領主系の核"><td class="name">内政・国家建設</td><td class="sub"><span class="badge">目的系</span></td><td class="desc">領地・拠点・王国を一から作り上げることが主目的。辺境伯・領主系の核</td><td class="cheat">知識チート・生産チート・政治力</td><td class="emi" data-v="1">○</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">婚約・政略結婚が内政の一環として自然発生。信頼を積み上げたヒロインとの深い関係構築が軸</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="復讐・因縁の完遂" data-desc="過去の傷・裏切り・喪失への復讐が物語の推進力。最初から目的が設定されている"><td class="name">復讐・因縁の完遂</td><td class="sub"><span class="badge">目的系</span></td><td class="desc">過去の傷・裏切り・喪失への復讐が物語の推進力。最初から目的が設定されている</td><td class="cheat">隠れ最強・情報収集・鑑定</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">復讐の過程で出会うヒロインが主人公の心を解かす構造。加害曇らせ・ざまぁ制裁と組み合わせると強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">成長・ざまぁ系</td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="王道成り上がり" data-desc="無名・底辺からスタートし段階的に強くなる最も基本の構造"><td class="name">王道成り上がり</td><td class="sub"><span class="badge">成長系</span></td><td class="desc">無名・底辺からスタートし段階的に強くなる最も基本の構造</td><td class="cheat">どのチートとも相性が良い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">各ステージをクリアするたびにヒロインが増えるハーレム構築と自然に合体する</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="称号・スキル隠蔽" data-desc="最強スキルや特殊称号を意図的に隠し続ける。バレる瞬間のカタルシスが核"><td class="name">称号・スキル隠蔽</td><td class="sub"><span class="badge">伏線系</span></td><td class="desc">最強スキルや特殊称号を意図的に隠し続ける。バレる瞬間のカタルシスが核</td><td class="cheat">隠れ最強・鑑定スキル</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">力が判明した後のヒロインの態度変化がエロの起点。隠していた間の積み上げた信頼が感情の重さを作る</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="追放→逆転" data-desc="パーティや組織から追い出され、別の場所で力をつけて見返す"><td class="name">追放→逆転</td><td class="sub"><span class="badge">ざまぁ系</span></td><td class="desc">パーティや組織から追い出され、別の場所で力をつけて見返す</td><td class="cheat">隠れ最強・覚醒型</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">追放時に親切にしてくれたヒロインとの強いエロ。追放した側へのざまぁエロも使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="婚約破棄からの出発" data-desc="一方的に婚約を破棄された主人公（またはヒロイン）が独立し成功する"><td class="name">婚約破棄からの出発</td><td class="sub"><span class="badge">ざまぁ系</span></td><td class="desc">一方的に婚約を破棄された主人公（またはヒロイン）が独立し成功する</td><td class="cheat">隠れ才能・知識チート</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">捨てた側の後悔×新たなヒロインとの純愛。元婚約者へのざまぁエロと新恋愛エロの対比が強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="ざまぁ制裁" data-desc="主人公や仲間を虐げた悪役に社会的・肉体的制裁を与える"><td class="name">ざまぁ制裁</td><td class="sub"><span class="badge">ざまぁ系</span></td><td class="desc">主人公や仲間を虐げた悪役に社会的・肉体的制裁を与える</td><td class="cheat">圧倒的な力・鑑定（悪事の証拠収集）</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">支配的・加害的エロと親和性が高い。制裁の一環としてのエロ展開</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">曇らせ系</td></tr>
+<tr class="row-max" data-cat="③展開" data-name="加害曇らせ" data-desc="主人公が意図的にヒロイン・対象を精神的・肉体的に追い詰める。支配・調教・NTR返し系"><td class="name">加害曇らせ</td><td class="sub"><span class="badge">曇らせ系</span></td><td class="desc">主人公が意図的にヒロイン・対象を精神的・肉体的に追い詰める。支配・調教・NTR返し系</td><td class="cheat">圧倒的な力・情報収集能力</td><td class="emax" data-v="3">◎◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">支配関係・服従の快感。FANZAで既存の強い需要あり。力の非対称性がエロの動力になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="③展開" data-name="共依存曇らせ" data-desc="主人公自身が傷ついた存在で、ヒロインを自分の病みや苦境に情緒的に巻き込む"><td class="name">共依存曇らせ</td><td class="sub"><span class="badge">曇らせ系</span></td><td class="desc">主人公自身が傷ついた存在で、ヒロインを自分の病みや苦境に情緒的に巻き込む</td><td class="cheat">なし（感情・関係性が主軸）</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">感情移入・切なさ×エロの組み合わせ。近年増加中で差別化になりやすい。ループとの組み合わせが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">ハーレム・攻略系</td></tr>
+<tr class="row-max" data-cat="③展開" data-name="ハーレム構築" data-desc="複数のヒロインを獲得していく過程がメインの構造"><td class="name">ハーレム構築</td><td class="sub"><span class="badge">ハーレム系</span></td><td class="desc">複数のヒロインを獲得していく過程がメインの構造</td><td class="cheat">どのチートとも相性が良い</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">そのままエロの骨格になる。ヒロインの属性・獲得順の設計がそのまま作品設計になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="③展開" data-name="後宮・政略結婚" data-desc="複数の妻・妾を持つ制度が存在する設定。ハーレムを社会制度として正当化"><td class="name">後宮・政略結婚</td><td class="sub"><span class="badge">ハーレム系</span></td><td class="desc">複数の妻・妾を持つ制度が存在する設定。ハーレムを社会制度として正当化</td><td class="cheat">政治力・武力</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">寵愛争い・嫉妬・初夜・側室制度などエロシチュが構造的に発生する</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="ダンジョン攻略" data-desc="階層を進んでいく構造。目標が明確で話を区切りやすい"><td class="name">ダンジョン攻略</td><td class="sub"><span class="badge">攻略系</span></td><td class="desc">階層を進んでいく構造。目標が明確で話を区切りやすい</td><td class="cheat">戦闘チート・鑑定・スキル習得</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">階層ごとにヒロイン・ボス・エロシーンを配置しやすい。漫画向きの構造</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">スローライフ・その他</td></tr>
+<tr class="row-mi" data-cat="③展開" data-name="スローライフ（辺境・農村・商人）" data-desc="競争や戦闘から離れてのんびり暮らす"><td class="name">スローライフ（辺境・農村・商人）</td><td class="sub"><span class="badge">スローライフ系</span></td><td class="desc">競争や戦闘から離れてのんびり暮らす</td><td class="cheat">生産・調合・料理チート</td><td class="emi" data-v="1">○</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">日常の中にエロを自然に挿入。柔らかい共依存と相性よい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="③展開" data-name="勘違いコメディ" data-desc="実力を誤解され過大評価される"><td class="name">勘違いコメディ</td><td class="sub"><span class="badge">コメディ系</span></td><td class="desc">実力を誤解され過大評価される</td><td class="cheat">隠れ最強（本人に自覚なし）</td><td class="emi" data-v="1">○</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">ラブコメ的な距離感からエロへの移行。ギャグ→シリアスエロの落差が使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="③展開" data-name="ループ・やり直し恋愛" data-desc="失敗や死をリセットしながら最適解を探す"><td class="name">ループ・やり直し恋愛</td><td class="sub"><span class="badge">ループ系</span></td><td class="desc">失敗や死をリセットしながら最適解を探す</td><td class="cheat">周回知識・経験の蓄積</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dhi" data-v="3">高</td><td class="note">繰り返しの中でヒロインとの信頼・依存・共依存が深まる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ④ 主人公 -->
+<div class="sec" id="s4">
+  <div class="sech"><span class="dot"></span><h2>④ 主人公テンプレ</h2><small>— チート種別 / 身分・職業 / 性格・気質</small></div>
+  <div class="stabs">
+    <div class="stab on" data-ss="ss4a" onclick="ss(this,'s4')">④-A チート種別</div>
+    <div class="stab" data-ss="ss4b" onclick="ss(this,'s4')">④-B 身分・職業</div>
+    <div class="stab" data-ss="ss4c" onclick="ss(this,'s4')">④-C 性格・気質</div>
+    <div class="stab" data-ss="ss4d" onclick="ss(this,'s4')">④-D 種族</div>
+  </div>
+  <div class="ss active" id="ss4a">
+    <div class="tw"><table id="t4a">
+      <thead><tr>
+        <th onclick="sort(this,'t4a')">テンプレ名</th><th>サブカテゴリ</th><th>概要</th><th>最相性の来歴・世界観</th>
+        <th onclick="sort(this,'t4a')">エロ相性</th><th onclick="sort(this,'t4a')">競合</th><th onclick="sort(this,'t4a')">難易度</th>
+        <th>エロへの活かし方</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="row-hi" data-cat="④チート" data-name="能力チート（圧倒的戦闘力）" data-desc="同世界の他キャラを圧倒する戦闘・魔法の能力を持つ"><td class="name">能力チート（圧倒的戦闘力）</td><td class="sub"><span class="badge">戦闘系</span></td><td class="desc">同世界の他キャラを圧倒する戦闘・魔法の能力を持つ</td><td class="cheat">どの世界観とも相性良い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">守る→守られる→感謝エロの流れが自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="知識チート（現代知識）" data-desc="現代の技術・医療・料理・経営知識を異世界や過去で活用"><td class="name">知識チート（現代知識）</td><td class="sub"><span class="badge">知識系</span></td><td class="desc">現代の技術・医療・料理・経営知識を異世界や過去で活用</td><td class="cheat">タイムスリップ・異世界転生と特に相性良い</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">医療・レシピでヒロインを助ける→感謝・信頼→エロの流れが使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="鑑定・スキル取得系" data-desc="他者のステータスを見たり、あらゆるスキルを習得できる能力"><td class="name">鑑定・スキル取得系</td><td class="sub"><span class="badge">情報系</span></td><td class="desc">他者のステータスを見たり、あらゆるスキルを習得できる能力</td><td class="cheat">ゲームシステム世界と最相性</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">ヒロインの隠れた欲求を「見てしまう」展開でエロの起点に使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="無能力→覚醒型" data-desc="最初は無能・落ちこぼれとして苦労し、後から能力が覚醒する"><td class="name">無能力→覚醒型</td><td class="sub"><span class="badge">成長系</span></td><td class="desc">最初は無能・落ちこぼれとして苦労し、後から能力が覚醒する</td><td class="cheat">どの世界観とも相性良い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dmi" data-v="2">中</td><td class="note">弱い時期に支えてくれたヒロインへの恩返しエロ。感情の積み上げが濃くなる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="隠れ最強型" data-desc="実は最強なのに普段は隠している。力が判明した時のギャップが強み"><td class="name">隠れ最強型</td><td class="sub"><span class="badge">伏線系</span></td><td class="desc">実は最強なのに普段は隠している。力が判明した時のギャップが強み</td><td class="cheat">どの世界観とも相性良い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">力判明後のパワーシフトでエロ。ヒロインの態度が変わる瞬間が使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="④チート" data-name="生産・調合・料理系" data-desc="戦闘ではなく生産・調合・料理・農業で世界に貢献する主人公"><td class="name">生産・調合・料理系</td><td class="sub"><span class="badge">生産系</span></td><td class="desc">戦闘ではなく生産・調合・料理・農業で世界に貢献する主人公</td><td class="cheat">スローライフ・辺境領主系</td><td class="emi" data-v="1">○</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">媚薬・秘薬の調合からエロ展開に入りやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="歴史・未来知識チート" data-desc="タイムスリップ・ループ特有。過去や未来の出来事・結果を知っている"><td class="name">歴史・未来知識チート</td><td class="sub"><span class="badge">情報系</span></td><td class="desc">タイムスリップ・ループ特有。過去や未来の出来事・結果を知っている</td><td class="cheat">タイムスリップ・ループと一体</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">ヒロインの過去や運命を知っている優位性がエロの起点になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="外れスキル・ハズレ職業（実は最強）" data-desc="鑑定でFランク・収納スキルのみなど弱く見えるスキルが実は規格外の力を持つ"><td class="name">外れスキル・ハズレ職業（実は最強）</td><td class="sub"><span class="badge">伏線系</span></td><td class="desc">鑑定でFランク・収納スキルのみなど弱く見えるスキルが実は規格外の力を持つ</td><td class="cheat">召喚・クラス転移と最相性</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">見捨てられ期間に支えてくれたヒロインとの絆が深い。スキル覚醒後の逆転エロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④チート" data-name="前職スキル活用（医者・料理人・エンジニア）" data-desc="現代での職業・専門知識をそのまま異世界で活用するタイプ。知識チートの具体版"><td class="name">前職スキル活用（医者・料理人・エンジニア）</td><td class="sub"><span class="badge">知識系</span></td><td class="desc">現代での職業・専門知識をそのまま異世界で活用するタイプ。知識チートの具体版</td><td class="cheat">転生・タイムスリップと相性良い</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">医療行為・料理・建築など「助ける」行為からヒロインとの距離が縮まる流れが自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss4b">
+    <div class="tw"><table id="t4b">
+      <thead><tr>
+        <th onclick="sort(this,'t4b')">テンプレ名</th><th>サブカテゴリ</th><th>概要</th><th>チートとの組み合わせ</th>
+        <th onclick="sort(this,'t4b')">エロ相性</th><th onclick="sort(this,'t4b')">競合</th><th onclick="sort(this,'t4b')">難易度</th>
+        <th>エロへの活かし方</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="grp"><td colspan="10">異世界系</td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="冒険者（無名→有名）" data-desc="ギルド冒険者としてパーティを組みながら成長するスタイル"><td class="name">冒険者（無名→有名）</td><td class="sub"><span class="badge">戦闘職</span></td><td class="desc">ギルド冒険者としてパーティを組みながら成長するスタイル</td><td class="cheat">隠れ最強・鑑定・スキル習得</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">パーティヒロインとの密着・旅の中での関係進展が自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="騎士・女騎士" data-desc="国や貴族に仕える騎士。女騎士は特にギャップエロの定番"><td class="name">騎士・女騎士</td><td class="sub"><span class="badge">戦闘職</span></td><td class="desc">国や貴族に仕える騎士。女騎士は特にギャップエロの定番</td><td class="cheat">能力チート・隠れ最強</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">鎧の下の女性性・命令系統のギャップ・護衛任務での密着がエロの起点</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="師匠・後方師匠面" data-desc="弟子に指導しながら後方から支援する立場。実は最強の定番パターン"><td class="name">師匠・後方師匠面</td><td class="sub"><span class="badge">指導職</span></td><td class="desc">弟子に指導しながら後方から支援する立場。実は最強の定番パターン</td><td class="cheat">隠れ最強・知識チート</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dlo" data-v="1">低</td><td class="note">師弟関係の権力差・信頼→依存の流れがエロと親和性高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="④職業" data-name="貴族・領主・辺境伯" data-desc="貴族の立場で政治・内政・外交を担う主人公"><td class="name">貴族・領主・辺境伯</td><td class="sub"><span class="badge">異世界上流</span></td><td class="desc">貴族の立場で政治・内政・外交を担う主人公</td><td class="cheat">知識チート・政治力</td><td class="emi" data-v="1">○</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">政略結婚・婚約者・侍女との関係がエロの起点になりやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="魔王・ダンジョンマスター" data-desc="魔王や拠点（ダンジョン）を支配する立場の主人公"><td class="name">魔王・ダンジョンマスター</td><td class="sub"><span class="badge">異世界支配者</span></td><td class="desc">魔王や拠点（ダンジョン）を支配する立場の主人公</td><td class="cheat">拠点強化・魔族率いる能力</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">部下の魔族ヒロイン・捕虜・モンスター娘との関係構築がエロの構造になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="悪役令嬢（女性主人公）" data-desc="乙女ゲーの悪役として転生し破滅を回避しようとする女性主人公"><td class="name">悪役令嬢（女性主人公）</td><td class="sub"><span class="badge">乙女ゲー系</span></td><td class="desc">乙女ゲーの悪役として転生し破滅を回避しようとする女性主人公</td><td class="cheat">原作知識・破滅回避の計画</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dhi" data-v="3">高</td><td class="note">攻略対象を逆に落とす・逆ハー・女性主人公の積極性がエロの新鮮さになる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="奴隷・農民・平民スタート" data-desc="最低身分からのスタート。成り上がりと相性が良い"><td class="name">奴隷・農民・平民スタート</td><td class="sub"><span class="badge">異世界底辺</span></td><td class="desc">最低身分からのスタート。成り上がりと相性が良い</td><td class="cheat">隠れた才能・知識チート</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">同じく虐げられたヒロインとの連帯・共依存エロ。成り上がり後の逆転関係も使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="召喚勇者" data-desc="異世界に勇者として召喚された主人公。外れスキル・裏切り系との相性が良い"><td class="name">召喚勇者</td><td class="sub"><span class="badge">異世界特殊</span></td><td class="desc">異世界に勇者として召喚された主人公。外れスキル・裏切り系との相性が良い</td><td class="cheat">特殊スキル・現代知識</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">勇者一行の女性メンバー・姫・神官との関係が定番。追放→逆転と組み合わせやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="10">現代系</td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="退魔士・霊能力者" data-desc="現代日本で霊や悪魔を倒す職業。和風ファンタジーと現代の中間"><td class="name">退魔士・霊能力者</td><td class="sub"><span class="badge">現代戦闘職</span></td><td class="desc">現代日本で霊や悪魔を倒す職業。和風ファンタジーと現代の中間</td><td class="cheat">霊力覚醒・隠れた素質</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">退魔組織の女性メンバー・依頼主・憑依解除などエロの口実が豊富</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="学生（高校・大学）" data-desc="現代の学校に通う主人公。日常から非日常への変化が起きやすい"><td class="name">学生（高校・大学）</td><td class="sub"><span class="badge">現代一般</span></td><td class="desc">現代の学校に通う主人公。日常から非日常への変化が起きやすい</td><td class="cheat">隠れた異能・ダンジョン覚醒</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">制服・青春・クラスメート・部活など定番エロシチュが使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="社会人・サラリーマン" data-desc="会社員として働く主人公。過労・転職・異動などがトリガーになりやすい"><td class="name">社会人・サラリーマン</td><td class="sub"><span class="badge">現代一般</span></td><td class="desc">会社員として働く主人公。過労・転職・異動などがトリガーになりやすい</td><td class="cheat">社会人経験・業界知識</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">職場の同僚・上司・部下との関係がそのままエロの構造になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="無職・ニート・引きこもり" data-desc="社会に馴染めなかった主人公が異世界・ダンジョンで才能を開花させる"><td class="name">無職・ニート・引きこもり</td><td class="sub"><span class="badge">現代一般</span></td><td class="desc">社会に馴染めなかった主人公が異世界・ダンジョンで才能を開花させる</td><td class="cheat">隠れた才能・ゲーム知識</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">現実での挫折→異世界での成功のギャップ。俺TUEE感が強く出る</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④職業" data-name="配信者・インフルエンサー" data-desc="ゲーム・ダンジョン攻略を配信する現代的な職業設定"><td class="name">配信者・インフルエンサー</td><td class="sub"><span class="badge">現代一般</span></td><td class="desc">ゲーム・ダンジョン攻略を配信する現代的な職業設定</td><td class="cheat">現代知識・人脈・情報収集</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">ファン・コラボ相手との関係。SNS的な人間関係がエロの多様性を生む</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss4c">
+    <div class="tw"><table id="t4c">
+      <thead><tr>
+        <th onclick="sort(this,'t4c')">テンプレ名</th><th>サブカテゴリ</th><th>概要</th>
+        <th onclick="sort(this,'t4c')">エロ相性</th><th onclick="sort(this,'t4c')">競合</th><th onclick="sort(this,'t4c')">難易度</th>
+        <th>エロへの活かし方・組み合わせ</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="row-max" data-cat="④性格" data-name="好色英雄（ランス・BASTARD・鬼畜英雄系）" data-desc="主人公自身が欲望に忠実で好色。世界観全体が性にオープンで主人公は一応の英雄として機能する"><td class="name">好色英雄（ランス・BASTARD・鬼畜英雄系）</td><td class="sub"><span class="badge">好色気質</span></td><td class="desc">主人公自身が欲望に忠実で好色。世界観全体が性にオープンで主人公は一応の英雄として機能する</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">世界設定自体が好色なのでエロが物語の自然な構成要素になる。世界観設計が鍵</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④性格" data-name="真面目・誠実系（朴念仁）" data-desc="性的なことに疎く誠実。ヒロインからのアプローチに鈍感で翻弄される"><td class="name">真面目・誠実系（朴念仁）</td><td class="sub"><span class="badge">誠実気質</span></td><td class="desc">性的なことに疎く誠実。ヒロインからのアプローチに鈍感で翻弄される</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">積極的なヒロインとの対比でエロが際立つ。鈍感主人公がやっと気づく瞬間の溜めが使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④性格" data-name="冷酷・合理主義系" data-desc="感情より論理を優先する。他者への興味が薄いが特定のヒロインには執着・独占欲を見せる"><td class="name">冷酷・合理主義系</td><td class="sub"><span class="badge">冷酷気質</span></td><td class="desc">感情より論理を優先する。他者への興味が薄いが特定のヒロインには執着・独占欲を見せる</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">冷酷な主人公が特定のヒロインにだけ執着する展開。加害曇らせとの相性が良い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④性格" data-name="傷ついた者・闇落ち気質" data-desc="過去に深く傷つき、表向きは普通だが内面に闇を抱える"><td class="name">傷ついた者・闇落ち気質</td><td class="sub"><span class="badge">病み気質</span></td><td class="desc">過去に深く傷つき、表向きは普通だが内面に闇を抱える</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">共依存曇らせとの組み合わせが最強。傷ついた主人公がヒロインを巻き込む構造の核になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④性格" data-name="飄々・掴みどころなし系" data-desc="本心を見せない・実力を隠す。周囲がペースを掴めない存在感"><td class="name">飄々・掴みどころなし系</td><td class="sub"><span class="badge">飄々気質</span></td><td class="desc">本心を見せない・実力を隠す。周囲がペースを掴めない存在感</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">隠れ最強・後方師匠面と組み合わせると効果大。何を考えているかわからないのにヒロインが引き寄せられる構造</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="④性格" data-name="熱血・正義感系" data-desc="仲間・守りたい者のためなら何でもする。まっすぐで感情豊か"><td class="name">熱血・正義感系</td><td class="sub"><span class="badge">熱血気質</span></td><td class="desc">仲間・守りたい者のためなら何でもする。まっすぐで感情豊か</td><td class="emi" data-v="1">○</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">王道成り上がりとの相性が最も良い。守る→感謝→エロの流れが素直に機能する</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss4d">
+    <div class="tw"><table id="t4d">
+      <thead><tr>
+        <th onclick="sort(this,'t4d')">種族名</th><th>サブカテゴリ</th><th>概要・特徴</th>
+        <th onclick="sort(this,'t4d')">エロ相性</th><th onclick="sort(this,'t4d')">競合</th><th onclick="sort(this,'t4d')">難易度</th>
+        <th>エロへの活かし方・組み合わせ</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="grp"><td colspan="9">人間・基本系</td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="人間（現代人・一般人）" data-desc="最も基本の来歴。転生・転移の起点として最頻出。読者の自己投影がしやすい"><td class="name">人間（現代人・一般人）</td><td class="sub"><span class="badge">人間系</span></td><td class="desc">最も基本の来歴。転生・転移の起点として最頻出。読者の自己投影がしやすい</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">多い</td><td class="dlo" data-v="1">低</td><td class="note">特殊種族ヒロインとのギャップが際立つ。「普通の人間」が最強になる構造が読者に刺さりやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="人間（異世界現地人）" data-desc="転生・転移なしで元々その世界に生きる人間。設定がシンプルで自由度が高い"><td class="name">人間（異世界現地人）</td><td class="sub"><span class="badge">人間系</span></td><td class="desc">転生・転移なしで元々その世界に生きる人間。設定がシンプルで自由度が高い</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">世界観の縛りが少なく自由にエロ設定を構築できる。異種族ヒロインとの対比が作りやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">転生変化系</td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="転生でエルフに" data-desc="転生によって長命のエルフ種族に生まれ変わった主人公。人間的な感覚を残す"><td class="name">転生でエルフに</td><td class="sub"><span class="badge">転生変化</span></td><td class="desc">転生によって長命のエルフ種族に生まれ変わった主人公。人間的な感覚を残す</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">長命×現代人感覚のギャップ。エルフ社会での特殊な立場がヒロインとの関係に深みを与える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="転生で魔族・悪魔に" data-desc="人間だった主人公が魔族として転生。魔族社会での立場と人間的な感情の葛藤"><td class="name">転生で魔族・悪魔に</td><td class="sub"><span class="badge">転生変化</span></td><td class="desc">人間だった主人公が魔族として転生。魔族社会での立場と人間的な感情の葛藤</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">魔族の本能と人間的な良心の葛藤がドラマを生む。魔族ヒロイン・人間ヒロイン双方との関係が作りやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="転生で竜人・ドラゴンに" data-desc="最強種族に転生。圧倒的な力を持ちながら人間社会との折り合いをつける"><td class="name">転生で竜人・ドラゴンに</td><td class="sub"><span class="badge">転生変化</span></td><td class="desc">最強種族に転生。圧倒的な力を持ちながら人間社会との折り合いをつける</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">圧倒的な力を持つ存在が人間女性に惹かれる構造。番の本能・力の解放などエロ設定が豊富</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">特殊種族系</td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="獣人（獣耳・半獣）" data-desc="人間と獣の特徴を併せ持つ種族。本能的な部分が性格に影響する"><td class="name">獣人（獣耳・半獣）</td><td class="sub"><span class="badge">獣人系</span></td><td class="desc">人間と獣の特徴を併せ持つ種族。本能的な部分が性格に影響する</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">発情期・番の本能・縄張り意識などファンタジー的エロ設定が使える。人間ヒロインとの種族差エロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="鬼・半鬼・鬼人" data-desc="和風ファンタジーで頻出の鬼族。圧倒的な身体能力と情の深さが特徴"><td class="name">鬼・半鬼・鬼人</td><td class="sub"><span class="badge">和風系</span></td><td class="desc">和風ファンタジーで頻出の鬼族。圧倒的な身体能力と情の深さが特徴</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">和風世界観との相性が最も良い。鬼の力を抑えるという設定がヒロインとの絆構築に使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="エルフ（現地エルフ）" data-desc="元々エルフとして生まれた主人公。長命・高能力・人間社会との違いが軸になる"><td class="name">エルフ（現地エルフ）</td><td class="sub"><span class="badge">エルフ系</span></td><td class="desc">元々エルフとして生まれた主人公。長命・高能力・人間社会との違いが軸になる</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">短命の人間ヒロインへの感情移入と別れの予感が切なさとエロを同時に強化する</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">不死・特殊存在系</td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="不死者・アンデッド" data-desc="骸骨・リッチ・アンデッドとして転生または変化した主人公。死を超えた存在"><td class="name">不死者・アンデッド</td><td class="sub"><span class="badge">不死系</span></td><td class="desc">骸骨・リッチ・アンデッドとして転生または変化した主人公。死を超えた存在</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">ニッチだが刺さる層に強い。感情がないはずの存在がヒロインによって心を取り戻す展開が核</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="④種族" data-name="神・半神・神に近い存在" data-desc="神の血を引く・神に認められた存在として転生・覚醒した主人公"><td class="name">神・半神・神に近い存在</td><td class="sub"><span class="badge">神格系</span></td><td class="desc">神の血を引く・神に認められた存在として転生・覚醒した主人公</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">神格を持ちながら人間的な感情を持つ葛藤。神に近い存在が人間ヒロインを選ぶ特別感がエロを強化</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="④種族" data-name="スライム・モンスター転生" data-desc="モンスターとして転生。人間形態を取ることができる場合も多い"><td class="name">スライム・モンスター転生</td><td class="sub"><span class="badge">モンスター系</span></td><td class="desc">モンスターとして転生。人間形態を取ることができる場合も多い</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">モンスター主人公が進化・成長する過程で人間との交流が生まれる構造。ニッチな需要だが根強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ⑤ ヒロイン -->
+<div class="sec" id="s5">
+  <div class="sech"><span class="dot"></span><h2>⑤ ヒロインテンプレ</h2><small>— 関係性・性格・種族・職業の4軸で分類</small></div>
+  <div class="stabs">
+    <div class="stab on" data-ss="ss5a" onclick="ss(this,'s5')">A 関係性・立場</div>
+    <div class="stab" data-ss="ss5b" onclick="ss(this,'s5')">B 性格・気質タイプ</div>
+    <div class="stab" data-ss="ss5c" onclick="ss(this,'s5')">C 種族・特殊属性</div>
+    <div class="stab" data-ss="ss5d" onclick="ss(this,'s5')">D 職業・身分</div>
+  </div>
+  <div class="ss active" id="ss5a">
+    <div class="tw"><table id="t5a">
+      <thead><tr>
+        <th onclick="sort(this,'t5a')">ヒロイン名</th><th>サブカテゴリ</th><th>概要・特徴</th>
+        <th onclick="sort(this,'t5a')">エロ相性</th><th onclick="sort(this,'t5a')">需要</th><th onclick="sort(this,'t5a')">難易度</th>
+        <th>エロへの活かし方・相性の良い展開</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="row-hi" data-cat="⑤関係性" data-name="幼馴染" data-desc="幼い頃からの付き合い。ずっと傍にいたのに気づかなかった系の定番"><td class="name">幼馴染</td><td class="sub"><span class="badge">定番</span></td><td class="desc">幼い頃からの付き合い。ずっと傍にいたのに気づかなかった系の定番</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">幼少期の記憶×現在の肉体的成長のギャップが使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="守るべき存在（姫・令嬢・依頼主）" data-desc="主人公が守る立場にある女性。身分差・保護者関係がエロの緊張感を生む"><td class="name">守るべき存在（姫・令嬢・依頼主）</td><td class="sub"><span class="badge">定番</span></td><td class="desc">主人公が守る立場にある女性。身分差・保護者関係がエロの緊張感を生む</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">守る→感謝→信頼→エロの流れが最も自然。身分差×エロが強く出る典型</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="パーティメンバー・仲間" data-desc="一緒に戦う仲間。戦士・魔法使い・回復職など職業バリエーションが豊富"><td class="name">パーティメンバー・仲間</td><td class="sub"><span class="badge">定番</span></td><td class="desc">一緒に戦う仲間。戦士・魔法使い・回復職など職業バリエーションが豊富</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">命のやり取りをした後の性的緊張感。傷の手当て・野宿・温泉イベントなどシチュが豊富</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤関係性" data-name="弟子・後輩" data-desc="主人公に教わる立場。師匠系主人公と最も相性が良い"><td class="name">弟子・後輩</td><td class="sub"><span class="badge">依存系</span></td><td class="desc">主人公に教わる立場。師匠系主人公と最も相性が良い</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">尊敬→依存→恋愛の自然な流れ。師弟の権力差がエロの動力になる。後方師匠面パターンの核</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="先輩・年上" data-desc="主人公より立場・年齢が上。最初は引っ張る側だが崩れる瞬間が肝"><td class="name">先輩・年上</td><td class="sub"><span class="badge">定番</span></td><td class="desc">主人公より立場・年齢が上。最初は引っ張る側だが崩れる瞬間が肝</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">強がりが崩れる瞬間・立場逆転のギャップがエロの山場になりやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="ライバル・敵対ヒロイン" data-desc="当初は主人公と対立する立場。対立→共闘→恋愛の流れが定番"><td class="name">ライバル・敵対ヒロイン</td><td class="sub"><span class="badge">対立系</span></td><td class="desc">当初は主人公と対立する立場。対立→共闘→恋愛の流れが定番</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">敵対中の性的緊張感→降伏・和解後のエロが強い。加害曇らせとの相性が特に良い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="最初から懐いている一途な女性" data-desc="最初から主人公が好きで積極的に迫ってくる。純愛系の定番"><td class="name">最初から懐いている一途な女性</td><td class="sub"><span class="badge">依存系</span></td><td class="desc">最初から主人公が好きで積極的に迫ってくる。純愛系の定番</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">主人公側が受け身になれる。積極的な女性からの誘いがエロの起点になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤関係性" data-name="捕虜・奴隷" data-desc="主人公が保護・購入・解放した立場の女性。絶対的な信頼感が生まれる"><td class="name">捕虜・奴隷</td><td class="sub"><span class="badge">主従系</span></td><td class="desc">主人公が保護・購入・解放した立場の女性。絶対的な信頼感が生まれる</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">従属→信頼→愛情の流れ。主従関係がエロの構造そのものになる。ディストピア・ざまぁと相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤関係性" data-name="NTR対象（他の男と関係あり）" data-desc="すでに他の男と関係がある・婚約している女性を主人公が奪う構造"><td class="name">NTR対象（他の男と関係あり）</td><td class="sub"><span class="badge">NTR系</span></td><td class="desc">すでに他の男と関係がある・婚約している女性を主人公が奪う構造</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dhi" data-v="3">高</td><td class="note">禁断感・罪悪感がエロの強度を上げる。ざまぁ・加害曇らせと組み合わせると特に強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="神から授かった従者・使い魔" data-desc="転生チートとセットで授かる存在。最初から主人公に忠誠を誓っている"><td class="name">神から授かった従者・使い魔</td><td class="sub"><span class="badge">主従系</span></td><td class="desc">転生チートとセットで授かる存在。最初から主人公に忠誠を誓っている</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">忠誠心→愛情への変化が軸。契約・絆の深まりがエロの動力になる。転生直後から同行するため物語への絡め方が自然</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="記憶を失った女性" data-desc="過去を持たない・または前世の記憶を失ったヒロイン。謎解き展開と相性が高い"><td class="name">記憶を失った女性</td><td class="sub"><span class="badge">謎解き系</span></td><td class="desc">過去を持たない・または前世の記憶を失ったヒロイン。謎解き展開と相性が高い</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">無垢な状態から主人公だけを頼る構造がエロと親和性が高い。記憶が戻った時の感情的な爆発が山場になる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤関係性" data-name="元・敵国の姫・捕虜" data-desc="戦争・対立によって主人公の元に来た敵側のヒロイン。政略と感情の葛藤が軸"><td class="name">元・敵国の姫・捕虜</td><td class="sub"><span class="badge">対立系</span></td><td class="desc">戦争・対立によって主人公の元に来た敵側のヒロイン。政略と感情の葛藤が軸</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">敵対→信頼→愛情の流れが感情的に重い。政略結婚・人質としての関係が禁断感を生みエロを強化</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss5b">
+    <div class="tw"><table id="t5b">
+      <thead><tr>
+        <th onclick="sort(this,'t5b')">ヒロイン名</th><th>サブカテゴリ</th><th>概要・特徴</th>
+        <th onclick="sort(this,'t5b')">エロ相性</th><th onclick="sort(this,'t5b')">需要</th><th onclick="sort(this,'t5b')">難易度</th>
+        <th>エロへの活かし方・相性の良い展開</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="row-max" data-cat="⑤性格" data-name="ツンデレ" data-desc="普段は強がりや冷たい態度だが本当は好意がある"><td class="name">ツンデレ</td><td class="sub"><span class="badge">ツンデレ</span></td><td class="desc">普段は強がりや冷たい態度だが本当は好意がある</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">強がりが崩れる瞬間のエロが最も強い。「こんなの好きじゃない」と言いながら求める構造</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="クーデレ（無口・無表情）" data-desc="普段は感情を出さないが、主人公にだけ少しずつ心を開く"><td class="name">クーデレ（無口・無表情）</td><td class="sub"><span class="badge">クーデレ</span></td><td class="desc">普段は感情を出さないが、主人公にだけ少しずつ心を開く</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">感情が乏しいキャラが乱れる落差が強い。初めて欲求を自覚する展開と相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤性格" data-name="ヤンデレ" data-desc="主人公への愛情が歪んだ形で表れる。独占欲・束縛・暴力性を持つ"><td class="name">ヤンデレ</td><td class="sub"><span class="badge">ヤンデレ</span></td><td class="desc">主人公への愛情が歪んだ形で表れる。独占欲・束縛・暴力性を持つ</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">共依存曇らせとの組み合わせが最強。狂気と愛情の境界線が曖昧になるエロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤性格" data-name="メスガキ" data-desc="主人公を格下に見て生意気な態度をとる年下・小柄な女性"><td class="name">メスガキ</td><td class="sub"><span class="badge">メスガキ</span></td><td class="desc">主人公を格下に見て生意気な態度をとる年下・小柄な女性</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">生意気な態度を崩す展開がエロの核。加害曇らせ・ざまぁ制裁との組み合わせで特に強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤性格" data-name="清楚系・大和撫子" data-desc="礼儀正しく清楚な印象の女性。汚したい・堕としたい欲求を刺激する"><td class="name">清楚系・大和撫子</td><td class="sub"><span class="badge">清楚系</span></td><td class="desc">礼儀正しく清楚な印象の女性。汚したい・堕としたい欲求を刺激する</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">「こんな子が乱れる」落差がエロの強度を最大化する。初心な反応の描写が肝</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="活発・元気系" data-desc="明るく活発で体力がある女性。場を引っ張るタイプ"><td class="name">活発・元気系</td><td class="sub"><span class="badge">活発系</span></td><td class="desc">明るく活発で体力がある女性。場を引っ張るタイプ</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">体力があるのに性的には初心というギャップが使いやすい。スポーツ・訓練シーンからエロへ</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="ギャル" data-desc="派手な外見とは裏腹に案外面倒見が良い。ギャップが人気の理由"><td class="name">ギャル</td><td class="sub"><span class="badge">ギャル</span></td><td class="desc">派手な外見とは裏腹に案外面倒見が良い。ギャップが人気の理由</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">外見から積極的と思いきや実は純情というギャップ。または本当に積極的な場合も需要あり</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="天然・おっとり系" data-desc="空気が読めない・鈍感なため無自覚に主人公を翻弄する"><td class="name">天然・おっとり系</td><td class="sub"><span class="badge">天然系</span></td><td class="desc">空気が読めない・鈍感なため無自覚に主人公を翻弄する</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">無自覚な誘惑シーンがコメディ寄りのエロとして機能する。癒し系エロの定番</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="クール・知性派" data-desc="頭が良く冷静。プライドが高いため主人公に膝を屈する展開に強い"><td class="name">クール・知性派</td><td class="sub"><span class="badge">クール系</span></td><td class="desc">頭が良く冷静。プライドが高いため主人公に膝を屈する展開に強い</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dmi" data-v="2">中</td><td class="note">知性派がプライドを捨てて求める瞬間が最も強い。論理で否定できなくなる展開が使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="世話焼き・母性系" data-desc="主人公の面倒をよく見る包容力のある女性。姉・保護者的なポジション"><td class="name">世話焼き・母性系</td><td class="sub"><span class="badge">母性系</span></td><td class="desc">主人公の面倒をよく見る包容力のある女性。姉・保護者的なポジション</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">世話を焼いていた女性が立場を逆転される展開。甘やかし→甘えさせるの逆転が強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤性格" data-name="腹黒・裏表あり" data-desc="表の顔と裏の顔がある女性。本性が見えた時のギャップが強み"><td class="name">腹黒・裏表あり</td><td class="sub"><span class="badge">腹黒系</span></td><td class="desc">表の顔と裏の顔がある女性。本性が見えた時のギャップが強み</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">計算が崩れる瞬間・本音が出た時のエロが強い。腹黒が主人公だけには素直になる展開</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤性格" data-name="病み・メンヘラ系" data-desc="精神的に不安定で主人公への依存度が高い。愛情表現が歪みやすい"><td class="name">病み・メンヘラ系</td><td class="sub"><span class="badge">病み系</span></td><td class="desc">精神的に不安定で主人公への依存度が高い。愛情表現が歪みやすい</td><td class="emax" data-v="3">◎◎</td><td class="cmi" data-v="2">普通</td><td class="dhi" data-v="3">高</td><td class="note">共依存曇らせとの組み合わせが最強。不安定さが性的な強度を上げる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss5c">
+    <div class="tw"><table id="t5c">
+      <thead><tr>
+        <th onclick="sort(this,'t5c')">ヒロイン名</th><th>サブカテゴリ</th><th>概要・特徴</th>
+        <th onclick="sort(this,'t5c')">エロ相性</th><th onclick="sort(this,'t5c')">需要</th><th onclick="sort(this,'t5c')">難易度</th>
+        <th>エロへの活かし方・相性の良い展開</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="row-max" data-cat="⑤種族" data-name="獣人（獣耳・しっぽ）" data-desc="猫耳・犬耳・狐耳など獣の特徴を持つ女性。本能的な部分が強調される"><td class="name">獣人（獣耳・しっぽ）</td><td class="sub"><span class="badge">獣人</span></td><td class="desc">猫耳・犬耳・狐耳など獣の特徴を持つ女性。本能的な部分が強調される</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">発情期・マーキング・番の概念などファンタジー的エロ設定が豊富。需要が最も安定している人外枠</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤種族" data-name="エルフ" data-desc="長命で人間を見下しがちだが実は純情という定番設定"><td class="name">エルフ</td><td class="sub"><span class="badge">エルフ</span></td><td class="desc">長命で人間を見下しがちだが実は純情という定番設定</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">プライドの高い長命種が短命の人間主人公に堕とされる落差が強い。初めての経験系との相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="ドラゴン・竜人" data-desc="強大な存在だが主人公に従う・惚れる。番の概念が使いやすい"><td class="name">ドラゴン・竜人</td><td class="sub"><span class="badge">ドラゴン系</span></td><td class="desc">強大な存在だが主人公に従う・惚れる。番の概念が使いやすい</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">最強存在が主人公にだけ頭を垂れる構造。支配関係の逆転やパワーバランスのエロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤種族" data-name="悪魔・魔族" data-desc="誘惑・契約・主従関係の設定が豊富。魔族らしい性的な奔放さが使える"><td class="name">悪魔・魔族</td><td class="sub"><span class="badge">悪魔・魔族</span></td><td class="desc">誘惑・契約・主従関係の設定が豊富。魔族らしい性的な奔放さが使える</td><td class="emax" data-v="3">◎◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">誘惑が本職なのに主人公だけには本気になる逆転。契約エロ・魔族の性的な奔放さが活きる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="ゴーレム・アンドロイド系" data-desc="人工的に作られた存在が感情・欲求を獲得していく過程が描かれる"><td class="name">ゴーレム・アンドロイド系</td><td class="sub"><span class="badge">ゴーレム系</span></td><td class="desc">人工的に作られた存在が感情・欲求を獲得していく過程が描かれる</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">「感情がない」存在が初めて欲求を自覚する展開。性的なことに先入観がない設定がエロと相性良い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="⑤種族" data-name="幽霊・死霊系" data-desc="死んでいる・霊体の状態の女性。憑依などの設定がある"><td class="name">幽霊・死霊系</td><td class="sub"><span class="badge">幽霊系</span></td><td class="desc">死んでいる・霊体の状態の女性。憑依などの設定がある</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">憑依によって他のキャラの体を借りるエロなど特殊展開が可能。ニッチだが刺さる層には強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="神・精霊" data-desc="神や精霊という超越した存在が主人公に加護・恋愛感情を持つ"><td class="name">神・精霊</td><td class="sub"><span class="badge">神・精霊</span></td><td class="desc">神や精霊という超越した存在が主人公に加護・恋愛感情を持つ</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dhi" data-v="3">高</td><td class="note">神が人間に降りてくる・肉体を持つというファンタジー設定がエロの特別感を作る</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤種族" data-name="モンスター娘" data-desc="スライム・ラミア・ハーピーなど人外モンスターの女性化。性癖特化型"><td class="name">モンスター娘</td><td class="sub"><span class="badge">モンスター娘</span></td><td class="desc">スライム・ラミア・ハーピーなど人外モンスターの女性化。性癖特化型</td><td class="emax" data-v="3">◎◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">種族ごとの特殊な身体能力・繁殖本能などエロ設定が無限に作れる。ダンジョンマスター系と相性抜群</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">人間・基本系</td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="人間（普通）" data-desc="特別な種族設定がない最も基本のヒロイン。感情移入しやすく需要が安定"><td class="name">人間（普通）</td><td class="sub"><span class="badge">人間</span></td><td class="desc">特別な種族設定がない最も基本のヒロイン。感情移入しやすく需要が安定</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">異種族主人公との対比で人間ヒロインの柔らかさ・脆さが際立つ。最も汎用的な選択</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">追加種族系</td></tr>
+<tr class="row-max" data-cat="⑤種族" data-name="吸血鬼・ヴァンパイア" data-desc="長命・貴族・血・夜という要素を持つ。プライドと孤独が共存する属性"><td class="name">吸血鬼・ヴァンパイア</td><td class="sub"><span class="badge">吸血鬼</span></td><td class="desc">長命・貴族・血・夜という要素を持つ。プライドと孤独が共存する属性</td><td class="emax" data-v="3">◎◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">血を吸う行為のエロティシズム・夜の密室・支配的な振る舞いが崩れる落差が強い。エルフに匹敵する需要</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="ドワーフ" data-desc="職人気質・頑固・酒好きというイメージ。ギャップエロとして近年再評価中"><td class="name">ドワーフ</td><td class="sub"><span class="badge">ドワーフ</span></td><td class="desc">職人気質・頑固・酒好きというイメージ。ギャップエロとして近年再評価中</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">無骨な外見・口調と内面の女性性のギャップ。職人仕事への誇りが崩れる瞬間のエロが強い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="天使・堕天使" data-desc="神に仕える純粋な存在、または堕ちた天使。禁断感が最も強い種族属性"><td class="name">天使・堕天使</td><td class="sub"><span class="badge">天使系</span></td><td class="desc">神に仕える純粋な存在、または堕ちた天使。禁断感が最も強い種族属性</td><td class="emax" data-v="3">◎◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">神聖な存在が堕ちる構造は最も禁断感が高い。堕天使はすでに一度堕ちた存在として解放感もある</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="人魚・水棲系" data-desc="水中・海洋を支配する種族。陸上との文化差・身体的特徴が独自のエロを生む"><td class="name">人魚・水棲系</td><td class="sub"><span class="badge">人魚系</span></td><td class="desc">水中・海洋を支配する種族。陸上との文化差・身体的特徴が独自のエロを生む</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">水中での密着・人間の性文化を知らない無垢さ・足を得た時の戸惑いが独自のエロシチュになる</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤種族" data-name="半人半獣（ハーフ系）" data-desc="人間と獣人の混血。人間よりも本能が強く、純粋な獣人より人間社会に馴染んでいる"><td class="name">半人半獣（ハーフ系）</td><td class="sub"><span class="badge">ハーフ系</span></td><td class="desc">人間と獣人の混血。人間よりも本能が強く、純粋な獣人より人間社会に馴染んでいる</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">どちらの世界にも完全には属せない孤独感が主人公との特別な絆を作る。発情期などの本能的側面も使える</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-mi" data-cat="⑤種族" data-name="小人・ホビット系" data-desc="人間より小さな体格を持つ種族。サイズ差を活用した特殊シチュが核"><td class="name">小人・ホビット系</td><td class="sub"><span class="badge">小人系</span></td><td class="desc">人間より小さな体格を持つ種族。サイズ差を活用した特殊シチュが核</td><td class="emi" data-v="1">○</td><td class="clo" data-v="1">少ない</td><td class="dhi" data-v="3">高</td><td class="note">サイズ差エロのニッチ需要に特化。保護欲を刺激する体格と元気な性格のギャップが使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="ss" id="ss5d">
+    <div class="tw"><table id="t5d">
+      <thead><tr>
+        <th onclick="sort(this,'t5d')">ヒロイン名</th><th>サブカテゴリ</th><th>概要・特徴</th>
+        <th onclick="sort(this,'t5d')">エロ相性</th><th onclick="sort(this,'t5d')">需要</th><th onclick="sort(this,'t5d')">難易度</th>
+        <th>エロへの活かし方・相性の良い展開</th><th class="sel-col">選択</th>
+      </tr></thead>
+      <tbody>
+<tr class="grp"><td colspan="9">異世界系</td></tr>
+<tr class="row-max" data-cat="⑤職業" data-name="姫・王女" data-desc="国の姫君。高貴な身分ゆえの純粋さと世間知らずが特徴"><td class="name">姫・王女</td><td class="sub"><span class="badge">異世界上流</span></td><td class="desc">国の姫君。高貴な身分ゆえの純粋さと世間知らずが特徴</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">高貴な女性が「普通の男」に堕ちる構造。身分差×エロが最も強く出る典型</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤職業" data-name="女騎士・女戦士" data-desc="戦闘能力が高く誇り高い女性騎士。プライドと女性性のギャップが強み"><td class="name">女騎士・女戦士</td><td class="sub"><span class="badge">戦闘職</span></td><td class="desc">戦闘能力が高く誇り高い女性騎士。プライドと女性性のギャップが強み</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">強さのプライドが崩れる瞬間が最も強い。鎧の下の女性性・敗北後の展開・護衛任務での密着がシチュの核</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-max" data-cat="⑤職業" data-name="神官・聖女・巫女" data-desc="神に仕える清純な女性。清廉さと性的な展開の落差が最大化する属性"><td class="name">神官・聖女・巫女</td><td class="sub"><span class="badge">神聖職</span></td><td class="desc">神に仕える清純な女性。清廉さと性的な展開の落差が最大化する属性</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">神聖な存在が堕ちる構造はエロ同人で最も強いテンプレの一つ。清楚系の最上位互換</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="魔法使い・賢者" data-desc="魔法研究に没頭するタイプ。性的なことに疎いか、逆に研究対象として興味を持つ"><td class="name">魔法使い・賢者</td><td class="sub"><span class="badge">知識職</span></td><td class="desc">魔法研究に没頭するタイプ。性的なことに疎いか、逆に研究対象として興味を持つ</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">「研究のため」という口実でエロに踏み込む展開や、初体験の描写が使いやすい</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="商人・ギルドスタッフ" data-desc="世慣れしたビジネスウーマン的な女性。計算高いが主人公には素直になる"><td class="name">商人・ギルドスタッフ</td><td class="sub"><span class="badge">商業職</span></td><td class="desc">世慣れしたビジネスウーマン的な女性。計算高いが主人公には素直になる</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dmi" data-v="2">中</td><td class="note">交渉・取引という文脈からエロへの移行が自然。世慣れしているのに主人公だけに崩れる展開</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="grp"><td colspan="9">現代系</td></tr>
+<tr class="row-max" data-cat="⑤職業" data-name="女教師・先生" data-desc="現代設定での定番。立場の違いと禁断感が強い"><td class="name">女教師・先生</td><td class="sub"><span class="badge">現代職</span></td><td class="desc">現代設定での定番。立場の違いと禁断感が強い</td><td class="emax" data-v="3">◎◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">禁断の関係性がエロの強度を上げる。先生という権威が崩れる展開・立場逆転のエロが核</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="クラスメート・同級生" data-desc="同じ学校・クラスの女性。対等な立場からの関係発展が現代学園の定番"><td class="name">クラスメート・同級生</td><td class="sub"><span class="badge">現代職</span></td><td class="desc">同じ学校・クラスの女性。対等な立場からの関係発展が現代学園の定番</td><td class="ehi" data-v="2">◎</td><td class="chi" data-v="3">高</td><td class="dlo" data-v="1">低</td><td class="note">学校生活の日常から非日常へのギャップ。告白・文化祭・修学旅行などイベント活用が豊富</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="同僚・後輩OL" data-desc="職場の同僚・後輩。社会人設定の現代ダンジョンと組み合わせやすい"><td class="name">同僚・後輩OL</td><td class="sub"><span class="badge">現代職</span></td><td class="desc">職場の同僚・後輩。社会人設定の現代ダンジョンと組み合わせやすい</td><td class="ehi" data-v="2">◎</td><td class="cmi" data-v="2">普通</td><td class="dlo" data-v="1">低</td><td class="note">残業・出張・飲み会など社会人あるあるシチュからエロへの移行。読者の共感ベースが高い</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="配信者・アイドル" data-desc="表の顔（配信者・アイドル）と私生活のギャップが強い現代的なヒロイン"><td class="name">配信者・アイドル</td><td class="sub"><span class="badge">現代有名人</span></td><td class="desc">表の顔（配信者・アイドル）と私生活のギャップが強い現代的なヒロイン</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">公の顔と私生活のギャップ。配信者主人公と組み合わせると世界観が統一される</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+<tr class="row-hi" data-cat="⑤職業" data-name="退魔士・能力者（同業者）" data-desc="同じ退魔・能力者組織に属する女性。共闘から始まる関係"><td class="name">退魔士・能力者（同業者）</td><td class="sub"><span class="badge">現代職</span></td><td class="desc">同じ退魔・能力者組織に属する女性。共闘から始まる関係</td><td class="ehi" data-v="2">◎</td><td class="clo" data-v="1">少ない</td><td class="dmi" data-v="2">中</td><td class="note">命がけの共闘後の性的緊張感。組織内の上下関係・秘密任務でのシチュが豊富</td><td class="sel-col"><button class="sel-btn" onclick="toggleSel(this)">✓</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+</main>
+<script>
+
+const selected = new Map();
+function toggleSel(btn){
+  const tr=btn.closest('tr');
+  const cat=tr.dataset.cat, name=tr.dataset.name, desc=tr.dataset.desc;
+  if(!cat||!name) return;
+  if(selected.has(name)){
+    selected.delete(name); btn.classList.remove('on'); tr.classList.remove('sel');
+  } else {
+    selected.set(name,{cat,name,desc}); btn.classList.add('on'); tr.classList.add('sel');
+  }
+  updateSummary();
+}
+function updateSummary(){
+  const list=document.getElementById('sum-list');
+  const cnt=document.getElementById('sel-count');
+  const n=selected.size;
+  if(n===0){cnt.textContent='まだ選択なし';list.innerHTML='<div class="sum-empty">行をクリックして<br>設定を選択してください</div>';return;}
+  cnt.textContent=n+'項目選択中';
+  const catOrder=['①来歴','②世界観','③展開','④チート','④職業','④性格','④種族','⑤関係性','⑤性格','⑤種族','⑤職業'];
+  const groups={};
+  for(const[,v] of selected){if(!groups[v.cat])groups[v.cat]=[];groups[v.cat].push(v);}
+  let html='';
+  for(const cat of catOrder){
+    if(!groups[cat]) continue;
+    html+=`<div class="sg"><div class="sg-title">${cat}</div>`;
+    for(const item of groups[cat]) html+=`<div class="si"><div class="si-name">${item.name}</div><div class="si-desc">${item.desc}</div></div>`;
+    html+='</div>';
+  }
+  list.innerHTML=html;
+}
+function copyToClipboard(){
+  if(selected.size===0){alert('設定を選択してください');return;}
+  const catOrder=['①来歴','②世界観','③展開','④チート','④職業','④性格','④種族','⑤関係性','⑤性格','⑤種族','⑤職業'];
+  const label={'①来歴':'【来歴・前提】','②世界観':'【世界観・舞台】','③展開':'【展開パターン】','④チート':'【主人公チート】','④職業':'【主人公の職業】','④性格':'【主人公の性格】','④種族':'【主人公の種族】','⑤関係性':'【ヒロインの関係性】','⑤性格':'【ヒロインの性格】','⑤種族':'【ヒロインの種族】','⑤職業':'【ヒロインの職業】'};
+  const groups={};
+  for(const[,v] of selected){if(!groups[v.cat])groups[v.cat]=[];groups[v.cat].push(v);}
+  let text='以下のなろうテンプレ設定をもとに、FANZA向け成人漫画の脚本を作ってください。\n\n=== 選択した設定 ===\n\n';
+  for(const cat of catOrder){
+    if(!groups[cat]) continue;
+    text+=label[cat]+'\n';
+    for(const item of groups[cat]) text+=`・${item.name}：${item.desc}\n`;
+    text+='\n';
+  }
+  text+='=== 制作要件 ===\n・ページ数：20〜30p（短編・練習用）\n・テンプレ崩しのユーモアを意識する\n・まずあらすじと章構成を提案してください\n';
+  navigator.clipboard.writeText(text).then(()=>{
+    const b=document.getElementById('copy-btn');
+    b.textContent='✅ コピーしました！';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='📋 Claude用にコピー';b.classList.remove('ok');},2000);
+  });
+}
+function resetAll(){
+  selected.clear();
+  document.querySelectorAll('.sel-btn.on').forEach(b=>{b.classList.remove('on');b.closest('tr').classList.remove('sel');});
+  updateSummary();
+}
+
+// メインタブ
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.getElementById(t.dataset.sec).classList.add('active');
+  });
+});
+
+// サブタブ
+function ss(el,parent){
+  const p=document.getElementById(parent);
+  p.querySelectorAll('.ss').forEach(s=>s.classList.remove('active'));
+  p.querySelectorAll('.stab').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(el.dataset.ss).classList.add('active');
+}
+
+// フィルター
+let fon=false;
+function toggleF(){
+  fon=!fon;
+  document.getElementById('FB').classList.toggle('on',fon);
+  document.querySelectorAll('.row-hi,.row-mi,.grp').forEach(r=>r.style.display=fon?'none':'');
+}
+
+// チェック
+function ck(btn){
+  btn.classList.toggle('on');
+  btn.closest('tr').classList.toggle('used');
+  save();
+}
+function save(){
+  const st={};
+  document.querySelectorAll('tbody tr[class]').forEach((r,i)=>{if(r.classList.contains('used'))st[i]=1;});
+  localStorage.setItem('nt3',JSON.stringify(st));
+}
+function load(){
+  const st=JSON.parse(localStorage.getItem('nt3')||'{}');
+  document.querySelectorAll('tbody tr[class]').forEach((r,i)=>{
+    if(st[i]){r.classList.add('used');const b=r.querySelector('.ck');if(b)b.classList.add('on');}
+  });
+}
+load();
+
+// ソート
+const sortState={};
+function sort(th,tid){
+  const col=Array.from(th.parentNode.children).indexOf(th);
+  const tbl=document.getElementById(tid);
+  const tbody=tbl.querySelector('tbody');
+  const rows=Array.from(tbody.querySelectorAll('tr:not(.grp)'));
+
+  // 方向切り替え
+  const key=tid+'_'+col;
+  const asc=sortState[key]!==true;
+  sortState[key]=asc;
+
+  // ヘッダーのマーク
+  tbl.querySelectorAll('thead th').forEach(h=>{h.classList.remove('sort-asc','sort-desc');});
+  th.classList.add(asc?'sort-asc':'sort-desc');
+
+  // ソート
+  rows.sort((a,b)=>{
+    const ca=a.children[col];
+    const cb=b.children[col];
+    if(!ca||!cb)return 0;
+    const va=ca.dataset.v!==undefined?parseInt(ca.dataset.v):ca.textContent.trim();
+    const vb=cb.dataset.v!==undefined?parseInt(cb.dataset.v):cb.textContent.trim();
+    if(typeof va==='number'&&typeof vb==='number') return asc?va-vb:vb-va;
+    return asc?va.localeCompare(vb,'ja'):vb.localeCompare(va,'ja');
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+
+// 初期タブ
+document.querySelector('.tab[data-sec="s1"]').click();
+</script>
+</body>
+</html>
